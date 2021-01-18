@@ -1,4 +1,4 @@
-import 'package:carrot_market_sample/page/home.dart';
+import 'package:carrot_market_sample/pages/app.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Home(),
+      home: App(),
     );
   }
 }
