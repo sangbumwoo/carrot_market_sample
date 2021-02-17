@@ -13,14 +13,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  String currentLocation;
+  ContentsRepository contentsRepository;
   List<Map<String, String>> datas = [];
   Map locationString = {
     "ara": "아라동",
     "ora": "오라동",
     "donam": "도남동",
   };
-  String currentLocation;
-  ContentsRepository contentsRepository;
 
   @override
   void initState() {

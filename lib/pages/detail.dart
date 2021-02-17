@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:carrot_market_sample/components/manor_templature_widget.dart';
+import 'package:carrot_market_sample/repository/contents_repository.dart';
 import 'package:carrot_market_sample/utils/data_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -14,6 +15,8 @@ class DetailContentView extends StatefulWidget {
 
 class _DetailContentViewState extends State<DetailContentView>
     with SingleTickerProviderStateMixin {
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+  ContentsRepository contentsRepository;
   Size size;
   List<Map<String, String>> imgList;
   int _current;
@@ -21,10 +24,13 @@ class _DetailContentViewState extends State<DetailContentView>
   ScrollController _controller = ScrollController();
   AnimationController _animationController;
   Animation _colorTween;
+  bool isMyFavoriteContent;
 
   @override
   void initState() {
     super.initState();
+    contentsRepository = ContentsRepository();
+    isMyFavoriteContent = false;
     _animationController = AnimationController(vsync: this);
     _colorTween = ColorTween(begin: Colors.white, end: Colors.black)
         .animate(_animationController);
@@ -39,6 +45,11 @@ class _DetailContentViewState extends State<DetailContentView>
         // print("${_controller.offset}, ${_animationController.value}");
       });
     });
+    _loadMyFavoriteContentState();
+  }
+
+  _loadMyFavoriteContentState() async {
+    contentsRepository.isMyFavoriteContents(widget.data["cid"]);
   }
 
   @override
@@ -301,21 +312,42 @@ class _DetailContentViewState extends State<DetailContentView>
         children: [
           GestureDetector(
             onTap: () {
-              print("관심상품 이벤트 발생");
+              contentsRepository.addMyFavoriteContent(widget.data);
+              setState(() {
+                isMyFavoriteContent = !isMyFavoriteContent;
+              });
+              scaffoldKey.currentState.showSnackBar(
+                SnackBar(
+                    duration: Duration(milliseconds: 1000),
+                    content: Text(
+                      isMyFavoriteContent
+                          ? "관심목록에 등록되었습니다."
+                          : "관심목록에서 제거되었습니다.",
+                    )),
+              );
             },
-            child: SvgPicture.asset(
-              "assets/svg/heart_off.svg",
-              width: 25,
-              height: 25,
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              color: Colors.transparent,
+              child: SvgPicture.asset(
+                isMyFavoriteContent
+                    ? "assets/svg/heart_on.svg"
+                    : "assets/svg/heart_off.svg",
+                width: 25,
+                height: 25,
+                color: Color(0xfff08f4f),
+              ),
             ),
           ),
           Container(
-            margin: const EdgeInsets.only(left: 15, right: 10),
+            margin: const EdgeInsets.only(left: 0, right: 10),
             width: 1,
             height: 40,
             color: Colors.black.withOpacity(0.3),
           ),
           Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
                 DataUtils.calcStringToWon(widget.data["price"]),
@@ -325,7 +357,7 @@ class _DetailContentViewState extends State<DetailContentView>
                 ),
               ),
               Text("가격제안불가",
-                  style: TextStyle(fontSize: 14, color: Colors.grey)),
+                  style: TextStyle(fontSize: 12, color: Colors.grey)),
             ],
           ),
           Expanded(
@@ -359,6 +391,7 @@ class _DetailContentViewState extends State<DetailContentView>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       extendBodyBehindAppBar: true,
       appBar: _appbarWidget(),
       body: _bodyWidget(),
