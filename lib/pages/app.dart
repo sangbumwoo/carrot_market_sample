@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'home.dart';
+import 'favorite.dart';
 
 class App extends StatefulWidget {
   const App({Key key}) : super(key: key);
@@ -35,7 +36,7 @@ class _AppState extends State<App> {
         return Container();
         break;
       case 4:
-        return Container();
+        return MyFavoriteContents();
         break;
     }
     return Container();
@@ -43,18 +44,19 @@ class _AppState extends State<App> {
 
   BottomNavigationBarItem _bottomNavigationItem(String name, String label) {
     return BottomNavigationBarItem(
-        icon: Padding(
-          padding: const EdgeInsets.only(bottom: 3),
-          child: SvgPicture.asset("assets/svg/${name}_off.svg", width: 22),
+      icon: Padding(
+        padding: const EdgeInsets.only(bottom: 3),
+        child: SvgPicture.asset("assets/svg/${name}_off.svg", width: 22),
+      ),
+      activeIcon: Padding(
+        padding: const EdgeInsets.only(bottom: 3),
+        child: SvgPicture.asset(
+          "assets/svg/${name}_on.svg",
+          width: 22,
         ),
-        activeIcon: Padding(
-          padding: const EdgeInsets.only(bottom: 3),
-          child: SvgPicture.asset(
-            "assets/svg/${name}_on.svg",
-            width: 22,
-          ),
-        ),
-        label: label);
+      ),
+      label: label,
+    );
   }
 
   Widget _buttonNavigationBar() {

@@ -91,8 +91,8 @@ class _HomeState extends State<Home> {
         padding: EdgeInsets.symmetric(horizontal: 10),
         itemBuilder: (BuildContext _context, int index) {
           return GestureDetector(
+            behavior: HitTestBehavior.opaque,
             onTap: () {
-              print(datas[index]["title"]);
               Navigator.push(
                   context,
                   MaterialPageRoute(
