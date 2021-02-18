@@ -11,7 +11,7 @@ class LocalStorageRepository {
     }
   }
 
-  Future<void> storageValue(String key, String value) async {
+  Future<void> storeValue(String key, String value) async {
     try {
       return await storage.write(key: key, value: value);
     } catch (e) {

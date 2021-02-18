@@ -24,13 +24,13 @@ class _DetailContentViewState extends State<DetailContentView>
   ScrollController _controller = ScrollController();
   AnimationController _animationController;
   Animation _colorTween;
-  bool isMyFavoriteContent;
+  bool isMyFavoriteContent = false;
 
   @override
   void initState() {
     super.initState();
     contentsRepository = ContentsRepository();
-    isMyFavoriteContent = false;
+    // isMyFavoriteContent = false;
     _animationController = AnimationController(vsync: this);
     _colorTween = ColorTween(begin: Colors.white, end: Colors.black)
         .animate(_animationController);
@@ -49,7 +49,10 @@ class _DetailContentViewState extends State<DetailContentView>
   }
 
   _loadMyFavoriteContentState() async {
-    contentsRepository.isMyFavoriteContents(widget.data["cid"]);
+    bool ck = await contentsRepository.isMyFavoriteContents(widget.data["cid"]);
+    setState(() {
+      isMyFavoriteContent = ck;
+    });
   }
 
   @override
@@ -314,6 +317,7 @@ class _DetailContentViewState extends State<DetailContentView>
             onTap: () {
               contentsRepository.addMyFavoriteContent(widget.data);
               setState(() {
+                contentsRepository.addMyFavoriteContent(widget.data);
                 isMyFavoriteContent = !isMyFavoriteContent;
               });
               scaffoldKey.currentState.showSnackBar(
