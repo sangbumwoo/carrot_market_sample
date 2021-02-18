@@ -314,10 +314,15 @@ class _DetailContentViewState extends State<DetailContentView>
       child: Row(
         children: [
           GestureDetector(
-            onTap: () {
+            onTap: () async {
               contentsRepository.addMyFavoriteContent(widget.data);
+              if (isMyFavoriteContent) {
+                await contentsRepository
+                    .deleteMyFavoriteContent(widget.data["cid"]);
+              } else {
+                await contentsRepository.addMyFavoriteContent(widget.data);
+              }
               setState(() {
-                contentsRepository.addMyFavoriteContent(widget.data);
                 isMyFavoriteContent = !isMyFavoriteContent;
               });
               scaffoldKey.currentState.showSnackBar(

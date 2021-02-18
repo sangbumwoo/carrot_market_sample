@@ -173,6 +173,8 @@ class ContentsRepository extends LocalStorageRepository {
 
   Future<List> loadFavoriteContents() async {
     String jsonString = await this.getStoredValue(MY_FAVORITE_STORE_KEY);
+    print("loadFavoriteContents");
+    print(jsonString);
     if (jsonString != null) {
       List<dynamic> json = jsonDecode(jsonString);
       return json;
@@ -188,7 +190,20 @@ class ContentsRepository extends LocalStorageRepository {
     } else {
       favoriteContentList.add(content);
     }
-    this.storeValue(MY_FAVORITE_STORE_KEY, jsonEncode(favoriteContentList));
+    updateFavoriteContent(favoriteContentList);
+  }
+
+  void updateFavoriteContent(List favoriteContentList) async {
+    await this
+        .storeValue(MY_FAVORITE_STORE_KEY, jsonEncode(favoriteContentList));
+  }
+
+  deleteMyFavoriteContent(String cid) async {
+    List<dynamic> favoriteContentList = await loadFavoriteContents();
+    if (favoriteContentList != null && favoriteContentList is List) {
+      favoriteContentList.removeWhere((data) => data["cid"] == cid);
+    }
+    updateFavoriteContent(favoriteContentList);
   }
 
   Future<List<Map<String, String>>> loadContnetsFromLocation(
@@ -201,7 +216,9 @@ class ContentsRepository extends LocalStorageRepository {
   isMyFavoriteContents(String cid) async {
     bool isMyFavoriteContents = false;
     List json = await loadFavoriteContents();
-    if (json != null || !(json is List)) {
+    print("isMyFavoriteContents");
+    print(json);
+    if (json == null || !(json is List)) {
       return false;
     } else {
       for (dynamic data in json) {
