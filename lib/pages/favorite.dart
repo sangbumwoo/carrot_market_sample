@@ -55,8 +55,11 @@ class _MyFavoriteContentsState extends State<MyFavoriteContents> {
         });
   }
 
-  Future<List<dynamic>> _loadMyContentsList() async {
-    return await contentsRepository.loadFavoriteContents();
+  Future<dynamic> _loadMyContentsList() async {
+    // return await contentsRepository.loadFavoriteContents();
+    var contents = await contentsRepository.loadFavoriteContents();
+    print(contents);
+    return contents;
   }
 
   Widget makeDataList(List<dynamic> datas) {
@@ -65,6 +68,10 @@ class _MyFavoriteContentsState extends State<MyFavoriteContents> {
       itemBuilder: (BuildContext context, int index) {
         return GestureDetector(
           onTap: () {
+            print("onTap");
+            print(datas);
+            print("-----");
+            print(datas[index]);
             Navigator.push(
               context,
               MaterialPageRoute(

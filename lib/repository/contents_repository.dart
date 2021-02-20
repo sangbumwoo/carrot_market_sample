@@ -171,16 +171,32 @@ class ContentsRepository extends LocalStorageRepository {
     ]
   };
 
-  Future<List> loadFavoriteContents() async {
+  Future<List<Map<String, String>>> loadFavoriteContents() async {
     String jsonString = await this.getStoredValue(MY_FAVORITE_STORE_KEY);
-    print("loadFavoriteContents");
-    print(jsonString);
     if (jsonString != null) {
-      List<dynamic> json = jsonDecode(jsonString);
-      return json;
+      List<dynamic> dynamicList = jsonDecode(jsonString);
+      List<Map<String, String>> data = [];
+      dynamicList.forEach((element) {
+        Map<String, String> map = {};
+        for (String key in element.keys) {
+          map[key] = element[key];
+        }
+        data.add(map);
+      });
+      return data;
     } else {
       return null;
     }
+  }
+
+  Future<List> loadContnetsFromLocation(String location) async {
+    // pretending api call
+    await Future.delayed(Duration(milliseconds: 1000));
+    print("home");
+    List<Map<String, String>> listByLocation = data[location];
+    return listByLocation;
+    // print(data[location]);
+    // return data[location];
   }
 
   addMyFavoriteContent(Map<String, String> content) async {
@@ -204,13 +220,6 @@ class ContentsRepository extends LocalStorageRepository {
       favoriteContentList.removeWhere((data) => data["cid"] == cid);
     }
     updateFavoriteContent(favoriteContentList);
-  }
-
-  Future<List<Map<String, String>>> loadContnetsFromLocation(
-      String location) async {
-    // pretending api call
-    await Future.delayed(Duration(milliseconds: 1000));
-    return data[location];
   }
 
   isMyFavoriteContents(String cid) async {

@@ -82,8 +82,12 @@ class _HomeState extends State<Home> {
     );
   }
 
-  loadContents() {
-    return contentsRepository.loadContnetsFromLocation(currentLocation);
+  Future<dynamic> loadContents() async {
+    // return await contentsRepository.loadContnetsFromLocation(currentLocation);
+    var contents =
+        await contentsRepository.loadContnetsFromLocation(currentLocation);
+    print(contents);
+    return contents;
   }
 
   Widget makeDataList(datas) {
